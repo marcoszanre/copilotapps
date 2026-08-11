@@ -1,3 +1,8 @@
+---
+name: publish-html-page
+description: Builds a polished, self-contained HTML page — a one-pager, landing page, briefing or dashboard — from a meeting recap, account briefing, or the user's own description, then shows it in full with the exact target path and, only after explicit approval, publishes it as a commit into a brand-new folder in the marcoszanre/copilotapps GitHub repository. Use it whenever the user wants a page built or something published.
+---
+
 # Publish HTML Page
 
 ## Purpose

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "name": "sales-meeting-assistant",
+  "capabilities": [
+    "declarativeAgent",
+    "agentSkills",
+    "agentConnectors"
+  ]
+}

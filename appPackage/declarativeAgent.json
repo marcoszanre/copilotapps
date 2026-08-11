@@ -1,0 +1,66 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/copilot/declarative-agent/v1.8/schema.json",
+  "version": "v1.8",
+  "name": "Sales Studio${{APP_NAME_SUFFIX}}",
+  "description": "Sales Studio takes you from customer meeting to shareable page. It prepares you before a meeting, captures decisions and action items after it, and builds account briefings — all grounded in your own Microsoft 365 content: email, calendar, Teams conversations, and files in OneDrive and SharePoint. It then turns any of that work into a polished, self-contained HTML one-pager, shows it to you for approval, and only after you say yes publishes it to a brand-new folder in the marcoszanre/copilotapps GitHub repository. It never invents customer facts, never publishes without your explicit go-ahead, and never puts secrets or confidential detail into a published page.",
+  "instructions": "$[file('instruction.txt')]",
+  "capabilities": [
+    {
+      "name": "Email"
+    },
+    {
+      "name": "Meetings"
+    },
+    {
+      "name": "TeamsMessages"
+    },
+    {
+      "name": "OneDriveAndSharePoint"
+    },
+    {
+      "name": "People",
+      "include_related_content": true
+    },
+    {
+      "name": "CodeInterpreter"
+    }
+  ],
+  "conversation_starters": [
+    {
+      "title": "Prep my next customer meeting",
+      "text": "Prepare me for my next external customer meeting: who is attending, what happened last time, what is still open, and what I should ask."
+    },
+    {
+      "title": "Prep a meeting by account",
+      "text": "Build a pre-read for my upcoming meeting with Contoso, including open items from our last conversation and suggested talking points."
+    },
+    {
+      "title": "Write my follow-up",
+      "text": "Summarize the customer meeting I just had: decisions, action items with owners and due dates, and draft the follow-up email to the customer."
+    },
+    {
+      "title": "Research an account",
+      "text": "Build an account briefing on Contoso: who at our company works with them, our recent engagement history, and open issues or opportunities."
+    },
+    {
+      "title": "Turn my recap into a page",
+      "text": "Take the recap of my last customer meeting and build it into a clean, self-contained HTML one-pager I can share, then show it to me before publishing anything."
+    },
+    {
+      "title": "Build a landing page",
+      "text": "Build me a responsive HTML landing page for our customer roundtable event, with a hero section, an agenda table and a sign-up call to action."
+    },
+    {
+      "title": "Build a metrics dashboard",
+      "text": "Build an HTML dashboard page from these numbers, with a summary strip and a chart, and tell me the exact folder you would publish it to."
+    },
+    {
+      "title": "Publish the approved page",
+      "text": "The page looks good — publish it to a new folder in marcoszanre/copilotapps and tell me the commit and the file path."
+    },
+    {
+      "title": "What have I published?",
+      "text": "List the pages already published under the pages/ folder in marcoszanre/copilotapps, newest first."
+    }
+  ]
+}

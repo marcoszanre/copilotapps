@@ -1,0 +1,68 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.29/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.29",
+  "version": "${{TEAMS_APP_VERSION}}",
+  "id": "${{TEAMS_APP_ID}}",
+  "developer": {
+    "name": "Contoso Sales Enablement",
+    "websiteUrl": "https://www.example.com/sales-meeting-assistant",
+    "privacyUrl": "https://www.example.com/sales-meeting-assistant/privacy",
+    "termsOfUseUrl": "https://www.example.com/sales-meeting-assistant/terms"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "Sales Studio${{APP_NAME_SUFFIX}}",
+    "full": "Sales Studio — meeting prep, recaps, account briefings and shareable pages"
+  },
+  "description": {
+    "short": "Prep meetings, recap them, brief accounts, and publish shareable HTML pages.",
+    "full": "Sales Studio is a customer-meeting co-pilot for sellers and account teams that takes you from meeting to shareable page. Before a meeting it builds a structured pre-read covering attendees, account background, open items from last time, risks and suggested talking points. After a meeting it produces a recap with decisions, action items with owners and due dates, and a ready-to-send follow-up email draft. At any time it can build an account briefing showing who at your company touches the account, the engagement history and cadence, open opportunities and open issues. All of that is grounded in your own Microsoft 365 content — email, calendar and meetings, Teams conversations, and files in OneDrive and SharePoint — using only content you already have access to. It can then turn any of that work into a polished, self-contained HTML one-pager, landing page or dashboard, show it to you in full alongside the exact target path, and publish it to a brand-new folder in a connected GitHub repository once you explicitly approve. It never invents customer facts, never publishes without your go-ahead, and never puts credentials or confidential detail into a published page."
+  },
+  "accentColor": "#FFFFFF",
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": [],
+  "copilotAgents": {
+    "declarativeAgents": [
+      {
+        "id": "declarativeAgent",
+        "file": "declarativeAgent.json"
+      }
+    ]
+  },
+  "agentSkills": [
+    {
+      "folder": "skills/meeting-prep"
+    },
+    {
+      "folder": "skills/follow-up-summary"
+    },
+    {
+      "folder": "skills/account-research"
+    },
+    {
+      "folder": "skills/publish-html-page"
+    }
+  ],
+  "agentConnectors": [
+    {
+      "id": "github",
+      "displayName": "GitHub",
+      "description": "Read and write access to GitHub repositories — browse code and history, and create commits that publish generated pages — via GitHub's hosted remote MCP server.",
+      "toolSource": {
+        "remoteMcpServer": {
+          "mcpServerUrl": "https://api.githubcopilot.com/mcp/",
+          "authorization": {
+            "type": "OAuthPluginVault",
+            "referenceId": "${{GITHUB_MCP_AUTH_ID}}"
+          }
+        }
+      }
+    }
+  ]
+}

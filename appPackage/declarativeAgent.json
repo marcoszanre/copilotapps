@@ -25,6 +25,12 @@
       "name": "CodeInterpreter"
     }
   ],
+  "actions": [
+    {
+      "id": "githubPlugin",
+      "file": "github-plugin.json"
+    }
+  ],
   "conversation_starters": [
     {
       "title": "Prep my next customer meeting",

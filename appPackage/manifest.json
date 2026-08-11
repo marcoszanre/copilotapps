@@ -48,21 +48,5 @@
     {
       "folder": "skills/publish-html-page"
     }
-  ],
-  "agentConnectors": [
-    {
-      "id": "github",
-      "displayName": "GitHub",
-      "description": "Read and write access to GitHub repositories — browse code and history, and create commits that publish generated pages — via GitHub's hosted remote MCP server.",
-      "toolSource": {
-        "remoteMcpServer": {
-          "mcpServerUrl": "https://api.githubcopilot.com/mcp/",
-          "authorization": {
-            "type": "OAuthPluginVault",
-            "referenceId": "${{GITHUB_MCP_AUTH_ID}}"
-          }
-        }
-      }
-    }
   ]
 }

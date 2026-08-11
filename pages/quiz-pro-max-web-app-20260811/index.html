@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz Pro Max</title>
+  <style>
+    :root {
+      --bg: #020617;
+      --card: rgba(255,255,255,.075);
+      --card2: rgba(15,23,42,.72);
+      --line: rgba(255,255,255,.12);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --cyan: #22d3ee;
+      --violet: #8b5cf6;
+      --emerald: #34d399;
+      --rose: #fb7185;
+      --amber: #fbbf24;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(139,92,246,.35), transparent 28rem),
+        radial-gradient(circle at 100% 18%, rgba(34,211,238,.24), transparent 30rem),
+        radial-gradient(circle at 36% 100%, rgba(236,72,153,.22), transparent 30rem),
+        var(--bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body:before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.08) 1px, transparent 0);
+      background-size: 28px 28px;
+      opacity: .85;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(22px);
+      background: rgba(2,6,23,.72);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--violet), var(--cyan));
+      box-shadow: 0 20px 50px rgba(34,211,238,.18);
+      animation: wiggle 3s infinite;
+    }
+    @keyframes wiggle {
+      0%,100% { transform: rotate(0); }
+      30% { transform: rotate(8deg); }
+      60% { transform: rotate(-8deg); }
+    }
+    h1, h2, h3, p { margin: 0; }
+    .brand h1 { font-size: clamp(22px, 3vw, 32px); letter-spacing: -.04em; }
+    .brand p { color: var(--muted); font-size: 13px; margin-top: 3px; }
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.07);
+      color: #dbeafe;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .layout {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 22px 20px 38px;
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr) 330px;
+      gap: 18px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      border-radius: 28px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.25);
+      overflow: hidden;
+    }
+    .pad { padding: 20px; }
+    .section-title { display: flex; align-items: center; gap: 8px; font-weight: 900; margin-bottom: 16px; }
+    input, button, select { font: inherit; }
+    input, select { width: 100%; border: 1px solid var(--line); background: rgba(15,23,42,.75); color: var(--text); padding: 13px 14px; border-radius: 18px; outline: none; }
+    .stack { display: grid; gap: 14px; }
+    .grid2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; }
+    .button { border: 1px solid var(--line); background: rgba(255,255,255,.08); color: var(--text); padding: 12px 14px; border-radius: 18px; cursor: pointer; font-weight: 850; transition: .18s ease; }
+    .button:hover { transform: translateY(-1px); background: rgba(255,255,255,.13); }
+    .button.primary { border: 0; background: linear-gradient(90deg, var(--violet), var(--cyan)); color: white; }
+    .button.active { background: var(--violet); color: white; }
+    .range-row { background: var(--card2); border: 1px solid var(--line); border-radius: 22px; padding: 14px; }
+    .range-row label { display: flex; justify-content: space-between; font-size: 13px; color: #cbd5e1; margin-bottom: 10px; }
+    input[type="range"] { accent-color: var(--violet); padding: 0; }
+    .toggle { display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--line); background: var(--card2); padding: 12px; border-radius: 18px; color: #cbd5e1; font-size: 14px; font-weight: 750; }
+    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 18px; }
+    .stat { border: 1px solid var(--line); background: var(--card); border-radius: 24px; padding: 18px; transition: .18s ease; }
+    .stat:hover { transform: translateY(-4px); }
+    .stat small { color: var(--muted); }
+    .stat strong { display: block; font-size: 30px; margin: 4px 0 1px; letter-spacing: -.04em; }
+    .question-band { height: 8px; background: linear-gradient(90deg, var(--violet), var(--cyan)); }
+    .question-body { padding: clamp(20px, 4vw, 34px); }
+    .qtop { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; margin-bottom: 22px; }
+    .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .pill { padding: 7px 10px; border-radius: 999px; font-size: 12px; font-weight: 900; border: 1px solid var(--line); background: rgba(255,255,255,.07); }
+    .easy { color: #a7f3d0; border-color: rgba(52,211,153,.3); background: rgba(52,211,153,.12); }
+    .medium { color: #fde68a; border-color: rgba(251,191,36,.3); background: rgba(251,191,36,.12); }
+    .hard { color: #fecdd3; border-color: rgba(251,113,133,.3); background: rgba(251,113,133,.12); }
+    .qcounter { color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: .22em; font-weight: 900; }
+    .question { margin-top: 11px; font-size: clamp(24px, 4vw, 42px); line-height: 1.08; letter-spacing: -.05em; max-width: 800px; }
+    .timer { min-width: 136px; border: 1px solid var(--line); background: var(--card2); border-radius: 28px; padding: 15px; text-align: center; }
+    .timer b { display: block; font-size: 42px; color: var(--cyan); }
+    .bar { height: 8px; background: rgba(255,255,255,.1); border-radius: 99px; overflow: hidden; margin-top: 10px; }
+    .bar span { display: block; height: 100%; width: 50%; background: linear-gradient(90deg, var(--violet), var(--cyan)); border-radius: 99px; transition: .25s linear; }
+    .options { display: grid; gap: 12px; }
+    .option { width: 100%; display: flex; justify-content: space-between; gap: 16px; align-items: center; border: 1px solid var(--line); background: rgba(15,23,42,.68); border-radius: 25px; padding: 16px; color: white; cursor: pointer; text-align: left; transition: .18s ease; }
+    .option:hover { transform: scale(1.01); border-color: rgba(139,92,246,.55); background: rgba(255,255,255,.1); }
+    .option .num { width: 40px; height: 40px; border-radius: 16px; background: rgba(255,255,255,.08); border: 1px solid var(--line); display: grid; place-items: center; font-weight: 950; flex: none; }
+    .option .left { display: flex; align-items: center; gap: 14px; }
+    .option.correct { border-color: rgba(52,211,153,.65); background: rgba(52,211,153,.14); }
+    .option.wrong { border-color: rgba(251,113,133,.65); background: rgba(251,113,133,.14); }
+    .explain { margin-top: 16px; border: 1px solid rgba(34,211,238,.22); background: rgba(34,211,238,.1); border-radius: 24px; padding: 18px; color: #cbd5e1; line-height: 1.65; display: none; }
+    .nav { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .tabs { margin-top: 18px; }
+    .tab-buttons { display: grid; grid-template-columns: repeat(3,1fr); background: rgba(255,255,255,.08); padding: 5px; border-radius: 23px; gap: 5px; }
+    .tab-buttons button { border: 0; background: transparent; color: #cbd5e1; padding: 12px; border-radius: 18px; font-weight: 900; cursor: pointer; }
+    .tab-buttons button.active { background: white; color: #0f172a; }
+    .tab-panel { display: none; margin-top: 14px; }
+    .tab-panel.active { display: block; }
+    .chart { height: 230px; border: 1px solid var(--line); border-radius: 24px; padding: 18px; background: rgba(15,23,42,.62); }
+    .chart-bars { height: 160px; display: flex; gap: 10px; align-items: end; margin-top: 18px; }
+    .chart-bars div { flex: 1; min-height: 8px; border-radius: 12px 12px 4px 4px; background: linear-gradient(180deg, var(--cyan), var(--violet)); }
+    .review-list { display: grid; gap: 10px; }
+    .review-item { border: 1px solid var(--line); background: rgba(255,255,255,.055); border-radius: 20px; padding: 14px; display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+    .leader { display: grid; gap: 10px; }
+    .leader-row { display: flex; align-items: center; justify-content: space-between; background: var(--card2); border: 1px solid var(--line); border-radius: 20px; padding: 12px; }
+    .rank { width: 36px; height: 36px; border-radius: 15px; display: grid; place-items: center; background: rgba(255,255,255,.1); font-weight: 950; margin-right: 10px; }
+    .leader-left { display: flex; align-items: center; }
+    .achievements { display: grid; gap: 10px; }
+    .achievement { border: 1px solid var(--line); background: var(--card2); border-radius: 18px; padding: 12px; font-weight: 850; color: #cbd5e1; }
+    .achievement.done { border-color: rgba(52,211,153,.28); background: rgba(52,211,153,.1); color: #d1fae5; }
+    .summary { background: linear-gradient(135deg, rgba(139,92,246,.2), rgba(34,211,238,.1)); line-height: 1.65; color: #cbd5e1; }
+    .confetti-piece { position: fixed; top: -16px; width: 9px; height: 9px; z-index: 999; border-radius: 999px; pointer-events: none; animation: fall 1.7s linear forwards; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(780deg); opacity: 0; } }
+    @media (max-width: 1100px) { .layout { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2,1fr); } .badges { display: none; } }
+    @media (max-width: 640px) { .stats { grid-template-columns: 1fr; } .qtop { flex-direction: column; } .timer { width: 100%; } .tab-buttons { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand"><div class="logo">🧠</div><div><h1>Quiz Pro Max</h1><p>Web app avançado com gamificação, analytics, ranking, revisão e coach inteligente.</p></div></div>
+      <div class="badges"><span class="badge">✨ Modo premium</span><span class="badge">⚡ Adaptive Quiz</span><button class="button" onclick="exportSummary()">⬇ Exportar</button></div>
+    </div>
+  </header>
+  <main class="layout">
+    <aside class="stack">
+      <section class="card pad"><h2 class="section-title">⚙️ Controles</h2><div class="stack"><input id="search" placeholder="Buscar tema, skill ou pergunta" oninput="applyFilters()" /><div><p style="color:#cbd5e1;font-weight:850;margin-bottom:8px;">Dificuldade</p><div class="grid2"><button class="button diff active" onclick="setDifficulty('Todos', this)">Todos</button><button class="button diff" onclick="setDifficulty('Fácil', this)">Fácil</button><button class="button diff" onclick="setDifficulty('Médio', this)">Médio</button><button class="button diff" onclick="setDifficulty('Difícil', this)">Difícil</button></div></div><div class="range-row"><label><span>⏱️ Tempo por questão</span><b id="speedLabel">45s</b></label><input id="speed" type="range" min="15" max="90" step="5" value="45" oninput="setSpeed(this.value)" /></div><label class="toggle">Timer <input id="timerToggle" type="checkbox" checked onchange="timerOn=this.checked" /></label><label class="toggle">Explicação <input id="explainToggle" type="checkbox" checked onchange="showExplain=this.checked; renderQuestion()" /></label><label class="toggle">Som visual <input id="soundToggle" type="checkbox" onchange="sound=this.checked" /></label></div></section>
+      <section class="card pad"><h2 class="section-title">⌨️ Atalhos</h2><div class="stack" style="gap:8px;color:#cbd5e1;font-size:14px;"><div class="range-row">1-4: responder</div><div class="range-row">← / →: navegar</div><div class="range-row">Espaço: pausar timer</div><div class="range-row">R: reiniciar</div></div></section>
+    </aside>
+    <section>
+      <div class="stats"><div class="stat"><small>Score</small><strong id="score">0</strong><small>pontos acumulados</small></div><div class="stat"><small>Precisão</small><strong id="accuracy">0%</strong><small>respostas corretas</small></div><div class="stat"><small>Streak</small><strong id="streak">0x</strong><small id="bestStreak">melhor: 0x</small></div><div class="stat"><small>Progresso</small><strong id="progress">0%</strong><small id="completed">0/6 concluídas</small></div></div>
+      <section class="card"><div class="question-band" id="band"></div><div class="question-body"><div class="qtop"><div><div class="meta" id="meta"></div><div class="qcounter" id="counter"></div><h2 class="question" id="question"></h2></div><div class="timer"><b id="time">45</b><small>segundos</small><div class="bar"><span id="timebar"></span></div></div></div><div class="options" id="options"></div><div class="explain" id="explain"></div><div class="nav"><div><button class="button" onclick="prevQuestion()">← Anterior</button><button class="button primary" onclick="nextQuestion()">Próxima →</button></div><div><button class="button" onclick="toggleTimer()">⏯ Pausar/Retomar</button><button class="button" onclick="resetQuiz()">↻ Reset</button></div></div></div></section>
+      <section class="tabs"><div class="tab-buttons"><button class="active" onclick="setTab('analytics', this)">📊 Analytics</button><button onclick="setTab('review', this)">🕘 Revisão</button><button onclick="setTab('coach', this)">🚀 Coach IA</button></div><div id="analytics" class="tab-panel active"><div class="card pad"><h2 class="section-title">📈 Evolução de pontuação</h2><div class="chart"><div style="display:flex;justify-content:space-between;color:#cbd5e1;"><span>Score acumulado</span><b id="chartTotal">0 pts</b></div><div class="chart-bars" id="chartBars"></div></div></div></div><div id="review" class="tab-panel"><div class="review-list" id="reviewList"></div></div><div id="coach" class="tab-panel"><div class="card pad"><h2 class="section-title">✨ Coach IA do Quiz</h2><p id="coachText" style="line-height:1.75;color:#cbd5e1;"></p><div class="stats" style="margin-top:16px;"><div class="stat"><small>Ritmo</small><strong>⏱️</strong><small>Ajuste o timer para simular pressão executiva.</small></div><div class="stat"><small>Consistência</small><strong>🛡️</strong><small>Busque streaks antes de subir a dificuldade.</small></div><div class="stat"><small>Meta</small><strong>🏆</strong><small>Complete tudo com 80%+ para dominar o tema.</small></div><div class="stat"><small>Foco</small><strong>🎯</strong><small>Revise categorias com erro antes de repetir.</small></div></div></div></div></section>
+    </section>
+    <aside class="stack"><section class="card pad"><h2 class="section-title">🏅 Ranking</h2><div class="leader" id="leaderboard"></div></section><section class="card pad"><h2 class="section-title">⭐ Conquistas</h2><div class="achievements" id="achievements"></div></section><section class="card pad summary"><h2 class="section-title">🔗 Resumo executivo</h2><p id="summaryText"></p><button class="button primary" style="width:100%;margin-top:14px;" onclick="exportSummary()">Baixar JSON</button></section></aside>
+  </main>
+  <script>
+    const BANK = [
+      { id: 1, category: "Copilot", difficulty: "Médio", points: 120, question: "Qual prática melhora a qualidade das respostas de um assistente corporativo?", options: ["Usar prompts genéricos", "Adicionar contexto e objetivo claro", "Evitar exemplos", "Pedir tudo em uma frase"], answer: 1, explanation: "Contexto, objetivo e formato esperado reduzem ambiguidade e aumentam a utilidade da resposta.", skill: "Prompt Engineering" },
+      { id: 2, category: "Dados", difficulty: "Difícil", points: 180, question: "Em um dashboard executivo, qual KPI é mais útil para acompanhar gargalo de aprovação?", options: ["Quantidade total de linhas", "Tempo médio em etapa de aprovação", "Nome do aprovador", "Cor do status"], answer: 1, explanation: "Tempo médio por etapa evidencia onde o processo trava e apoia priorização executiva.", skill: "Analytics" },
+      { id: 3, category: "Segurança", difficulty: "Médio", points: 130, question: "Qual é a melhor abordagem para compartilhar dados sensíveis?", options: ["Enviar por chat aberto", "Aplicar menor privilégio e classificação", "Remover senha", "Compactar sem criptografia"], answer: 1, explanation: "Menor privilégio e classificação reduzem risco e mantém governança sobre o acesso.", skill: "Governança" },
+      { id: 4, category: "Power BI", difficulty: "Fácil", points: 90, question: "Qual elemento ajuda o usuário a entender rapidamente a saúde de um projeto?", options: ["Tabela sem filtros", "Semáforo de status com tendência", "Lista completa de comentários", "Fonte pequena"], answer: 1, explanation: "Semáforo com tendência comunica risco e evolução sem exigir leitura detalhada.", skill: "Visual Design" },
+      { id: 5, category: "IA", difficulty: "Difícil", points: 200, question: "O que caracteriza um agente útil em um fluxo corporativo?", options: ["Responder só com teoria", "Executar ações com contexto, limites e rastreabilidade", "Ignorar políticas", "Sempre pedir confirmação"], answer: 1, explanation: "Agentes corporativos precisam atuar com contexto, segurança, rastreio e escopo claro.", skill: "Agentic AI" },
+      { id: 6, category: "Processos", difficulty: "Médio", points: 140, question: "Ao identificar atraso recorrente em compras acima de R$50k, qual análise é mais indicada?", options: ["Análise de causa raiz", "Trocar a paleta", "Duplicar o relatório", "Ocultar exceções"], answer: 0, explanation: "A causa raiz separa sintoma de origem do problema e permite ações corretivas reais.", skill: "Melhoria Contínua" }
+    ];
+    const gradients = { Copilot: "linear-gradient(90deg,#0ea5e9,#22d3ee)", Dados: "linear-gradient(90deg,#8b5cf6,#e879f9)", Segurança: "linear-gradient(90deg,#10b981,#2dd4bf)", "Power BI": "linear-gradient(90deg,#eab308,#fb923c)", IA: "linear-gradient(90deg,#6366f1,#38bdf8)", Processos: "linear-gradient(90deg,#f43f5e,#ec4899)" };
+    let index = 0, answers = {}, history = [], locked = false, timerOn = true, showExplain = true, sound = false, speed = 45, time = 45, streak = 0, bestStreak = 0, difficulty = "Todos", filtered = [...BANK], tick;
+    function currentQuestion(){ return filtered[index % filtered.length] || BANK[0]; }
+    function stats(){ const completed = Object.keys(answers).length; const correct = BANK.filter(q => answers[q.id] === q.answer).length; const accuracy = completed ? Math.round((correct / completed) * 100) : 0; const score = BANK.reduce((acc, q) => acc + (answers[q.id] === q.answer ? q.points : 0), 0); const progress = Math.round((completed / BANK.length) * 100); return { completed, correct, accuracy, score, progress }; }
+    function renderQuestion(){ const q = currentQuestion(); const selected = answers[q.id]; const reveal = selected !== undefined || locked; document.getElementById("band").style.background = gradients[q.category] || gradients.Copilot; document.getElementById("meta").innerHTML = `<span class="pill ${q.difficulty === "Fácil" ? "easy" : q.difficulty === "Médio" ? "medium" : "hard"}">${q.difficulty}</span><span class="pill">⚡ ${q.points} pts</span><span class="pill">🪄 ${q.skill}</span>`; document.getElementById("counter").textContent = `Questão ${(index % filtered.length) + 1} de ${filtered.length}`; document.getElementById("question").textContent = q.question; document.getElementById("options").innerHTML = q.options.map((opt, i) => { const isCorrect = q.answer === i; const isSelected = selected === i; const cls = reveal && isCorrect ? "correct" : reveal && isSelected && !isCorrect ? "wrong" : ""; const mark = reveal && isCorrect ? "✅" : reveal && isSelected && !isCorrect ? "❌" : ""; return `<button class="option ${cls}" onclick="choose(${i})"><span class="left"><span class="num">${i + 1}</span><b>${opt}</b></span><span>${mark}</span></button>`; }).join(""); const explain = document.getElementById("explain"); if (reveal && showExplain) { explain.style.display = "block"; const prefix = selected === undefined && locked ? "Tempo esgotado. " : selected === q.answer ? "Boa! " : "Quase. "; explain.innerHTML = `<b>💡 Explicação inteligente</b><br>${prefix}${q.explanation}`; } else { explain.style.display = "none"; } renderAllStats(); }
+    function renderAllStats(){ const s = stats(); document.getElementById("score").textContent = s.score; document.getElementById("accuracy").textContent = s.accuracy + "%"; document.getElementById("streak").textContent = streak + "x"; document.getElementById("bestStreak").textContent = "melhor: " + bestStreak + "x"; document.getElementById("progress").textContent = s.progress + "%"; document.getElementById("completed").textContent = `${s.completed}/${BANK.length} concluídas`; document.getElementById("summaryText").innerHTML = `Score atual de <b>${s.score}</b>, precisão de <b>${s.accuracy}%</b> e melhor streak de <b>${bestStreak}x</b>. Use este bloco como visão rápida para compartilhar performance do quiz.`; document.getElementById("coachText").textContent = s.completed === 0 ? "Comece respondendo algumas perguntas. O coach vai destacar pontos fortes, temas para reforço e próximos passos." : s.accuracy >= 80 ? "Excelente desempenho. Próximo passo: subir o tempo de pressão, filtrar por dificuldade difícil e buscar consistência de streak." : "Reforce os temas com erro, leia as explicações e tente novamente com foco nas categorias de menor acerto."; renderLeaderboard(s.score); renderAchievements(s); renderReview(); renderChart(s.score); }
+    function renderTime(){ document.getElementById("time").textContent = time; document.getElementById("time").style.color = time <= 10 ? "var(--rose)" : "var(--cyan)"; document.getElementById("timebar").style.width = Math.max(0, (time / speed) * 100) + "%"; }
+    function startTimer(){ clearInterval(tick); tick = setInterval(() => { if (!timerOn || locked) return; time -= 1; if (time <= 0) { time = 0; locked = true; renderQuestion(); } renderTime(); }, 1000); }
+    function choose(i){ const q = currentQuestion(); if (locked || answers[q.id] !== undefined) return; const correct = i === q.answer; answers[q.id] = i; history.push({ id: q.id, correct, points: q.points, category: q.category }); locked = true; if (correct) { streak += 1; bestStreak = Math.max(bestStreak, streak); confetti(); } else { streak = 0; } renderQuestion(); save(); }
+    function nextQuestion(){ index = (index + 1) % filtered.length; locked = false; time = speed; renderTime(); renderQuestion(); }
+    function prevQuestion(){ index = (index - 1 + filtered.length) % filtered.length; locked = false; time = speed; renderTime(); renderQuestion(); }
+    function resetQuiz(){ index = 0; answers = {}; history = []; locked = false; streak = 0; bestStreak = 0; time = speed; renderTime(); renderQuestion(); save(); }
+    function toggleTimer(){ timerOn = !timerOn; document.getElementById("timerToggle").checked = timerOn; }
+    function setSpeed(v){ speed = Number(v); time = speed; document.getElementById("speedLabel").textContent = speed + "s"; renderTime(); }
+    function setDifficulty(d, el){ difficulty = d; document.querySelectorAll(".diff").forEach(b => b.classList.remove("active")); el.classList.add("active"); applyFilters(); }
+    function applyFilters(){ const q = document.getElementById("search").value.toLowerCase(); filtered = BANK.filter(item => { const matchText = `${item.question} ${item.category} ${item.skill}`.toLowerCase().includes(q); const matchDiff = difficulty === "Todos" || item.difficulty === difficulty; return matchText && matchDiff; }); if (!filtered.length) filtered = [...BANK]; index = 0; locked = false; time = speed; renderTime(); renderQuestion(); }
+    function setTab(id, el){ document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active")); document.querySelectorAll(".tab-buttons button").forEach(b => b.classList.remove("active")); document.getElementById(id).classList.add("active"); el.classList.add("active"); }
+    function renderLeaderboard(myScore){ const data = [{ name: "Você", score: myScore, tag: "Atual" }, { name: "Cassandra", score: 760, tag: "Demo" }, { name: "Carlos", score: 640, tag: "Demo" }, { name: "Time IA", score: 590, tag: "Demo" }].sort((a,b) => b.score - a.score); document.getElementById("leaderboard").innerHTML = data.map((p,i) => `<div class="leader-row"><div class="leader-left"><span class="rank" style="${i===0 ? "background:var(--amber);color:#020617" : ""}">${i+1}</span><div><b>${p.name}</b><br><small style="color:#64748b">${p.tag}</small></div></div><b style="color:var(--cyan)">${p.score}</b></div>`).join(""); }
+    function renderAchievements(s){ const list = [["Primeira Resposta", s.completed >= 1], ["Streak 3x", bestStreak >= 3], ["Precisão 80%+", s.completed >= 3 && s.accuracy >= 80], ["Pontuação 500+", s.score >= 500], ["Modo Premium", true], ["Quiz Completo", s.completed === BANK.length]]; document.getElementById("achievements").innerHTML = list.map(([label, done]) => `<div class="achievement ${done ? "done" : ""}">${done ? "✅" : "⬜"} ${label}</div>`).join(""); }
+    function renderReview(){ document.getElementById("reviewList").innerHTML = BANK.map((q,i) => { const a = answers[q.id]; const done = a !== undefined; const ok = a === q.answer; return `<div class="review-item"><div><small style="color:#64748b">Q${i+1} • ${q.category} • ${q.difficulty}</small><h3 style="font-size:16px;margin-top:4px;">${q.question}</h3><p style="color:#94a3b8;font-size:13px;margin-top:4px;">${done ? "Sua resposta: " + q.options[a] : "Ainda não respondida"}</p></div><span class="pill ${!done ? "" : ok ? "easy" : "hard"}">${!done ? "Pendente" : ok ? "Correta" : "Rever"}</span></div>`; }).join(""); }
+    function renderChart(score){ document.getElementById("chartTotal").textContent = score + " pts"; let running = 0; const max = Math.max(1, BANK.reduce((a,q) => a + q.points, 0)); const bars = history.length ? history.map(h => { running += h.correct ? h.points : 0; return running; }) : [0]; document.getElementById("chartBars").innerHTML = bars.map(v => `<div style="height:${Math.max(8, (v / max) * 155)}px" title="${v} pts"></div>`).join(""); }
+    function confetti(){ const colors = ["#22c55e","#38bdf8","#a78bfa","#f97316","#f43f5e"]; for (let i = 0; i < 80; i++) { const el = document.createElement("span"); el.className = "confetti-piece"; el.style.left = Math.random() * 100 + "%"; el.style.background = colors[i % colors.length]; el.style.animationDelay = Math.random() * .25 + "s"; el.style.animationDuration = 1.3 + Math.random() * .9 + "s"; document.body.appendChild(el); setTimeout(() => el.remove(), 2400); } }
+    function exportSummary(){ const s = stats(); const payload = { score: s.score, accuracy: s.accuracy, completed: s.completed, bestStreak, answers, generatedAt: new Date().toISOString() }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = "quiz-pro-max-resultados.json"; a.click(); URL.revokeObjectURL(url); }
+    function save(){ localStorage.setItem("quiz-pro-max-state", JSON.stringify({ answers, history, streak, bestStreak })); }
+    function load(){ try { const raw = localStorage.getItem("quiz-pro-max-state"); if (!raw) return; const data = JSON.parse(raw); answers = data.answers || {}; history = data.history || []; streak = data.streak || 0; bestStreak = data.bestStreak || 0; } catch {} }
+    window.addEventListener("keydown", e => { if (["1","2","3","4"].includes(e.key)) choose(Number(e.key) - 1); if (e.key === "ArrowRight") nextQuestion(); if (e.key === "ArrowLeft") prevQuestion(); if (e.key.toLowerCase() === "r") resetQuiz(); if (e.key === " ") { e.preventDefault(); toggleTimer(); } });
+    load(); renderTime(); renderQuestion(); startTimer();
+  </script>
+</body>
+</html>

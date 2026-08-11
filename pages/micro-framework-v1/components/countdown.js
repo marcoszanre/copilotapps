@@ -1,0 +1,1 @@
+PageCore.ready(()=>{document.querySelectorAll("[data-countdown-target]").forEach(el=>{PageCore.countdown({target:el.dataset.countdownTarget,days:el.dataset.days,hours:el.dataset.hours,minutes:el.dataset.minutes,seconds:el.dataset.seconds,onDone:()=>{const title=document.getElementById(el.dataset.doneTitle);if(title)title.textContent="Hoje é o grande dia."}})})});

@@ -1,0 +1,2 @@
+/* Shared Core v1 */
+:root{--ms-blue:#0f6cbd;--ink:#111827;--muted:#5f6b7a;--line:#d9e2ec;--canvas:#f5f7fb;--radius:28px;--shell:1180px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--canvas);color:var(--ink);font-family:"Segoe UI",SegoeUI,system-ui,sans-serif;line-height:1.5}.shell{width:min(var(--shell),calc(100% - 40px));margin-inline:auto}.skip{position:fixed;left:12px;top:-80px;z-index:99;background:#fff;padding:10px}.skip:focus{top:12px}@media(max-width:520px){.shell{width:calc(100% - 24px)}}

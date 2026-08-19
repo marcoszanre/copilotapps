@@ -11,3 +11,8 @@ node_modules/
 .env
 .deployment
 .DS_Store
+
+# evidence captures (large binaries stay local)
+evidence/*.mp4
+evidence/*.ffmpeg.log
+evidence/_current_take.txt

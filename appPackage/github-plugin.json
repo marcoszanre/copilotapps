@@ -151,8 +151,7 @@
                   },
                   "owner": {
                     "type": "string",
-                    "description": "Repository owner (username or organization)",
-                    "x-mcp-header": "owner"
+                    "description": "Repository owner (username or organization)"
                   },
                   "path": {
                     "type": "string",
@@ -160,8 +159,7 @@
                   },
                   "repo": {
                     "type": "string",
-                    "description": "Repository name",
-                    "x-mcp-header": "repo"
+                    "description": "Repository name"
                   },
                   "sha": {
                     "type": "string",
@@ -233,13 +231,11 @@
                   },
                   "owner": {
                     "type": "string",
-                    "description": "Repository owner",
-                    "x-mcp-header": "owner"
+                    "description": "Repository owner"
                   },
                   "repo": {
                     "type": "string",
-                    "description": "Repository name",
-                    "x-mcp-header": "repo"
+                    "description": "Repository name"
                   }
                 },
                 "required": [
@@ -294,8 +290,7 @@
                   },
                   "owner": {
                     "type": "string",
-                    "description": "Repository owner (username or organization)",
-                    "x-mcp-header": "owner"
+                    "description": "Repository owner (username or organization)"
                   },
                   "path": {
                     "type": "string",
@@ -308,8 +303,7 @@
                   },
                   "repo": {
                     "type": "string",
-                    "description": "Repository name",
-                    "x-mcp-header": "repo"
+                    "description": "Repository name"
                   },
                   "sha": {
                     "type": "string",
@@ -365,8 +359,7 @@
                   },
                   "owner": {
                     "type": "string",
-                    "description": "Repository owner",
-                    "x-mcp-header": "owner"
+                    "description": "Repository owner"
                   },
                   "page": {
                     "type": "number",
@@ -385,8 +378,7 @@
                   },
                   "repo": {
                     "type": "string",
-                    "description": "Repository name",
-                    "x-mcp-header": "repo"
+                    "description": "Repository name"
                   },
                   "sha": {
                     "type": "string",
@@ -432,8 +424,7 @@
                 "properties": {
                   "owner": {
                     "type": "string",
-                    "description": "Repository owner",
-                    "x-mcp-header": "owner"
+                    "description": "Repository owner"
                   },
                   "page": {
                     "type": "number",
@@ -448,8 +439,7 @@
                   },
                   "repo": {
                     "type": "string",
-                    "description": "Repository name",
-                    "x-mcp-header": "repo"
+                    "description": "Repository name"
                   }
                 },
                 "required": [

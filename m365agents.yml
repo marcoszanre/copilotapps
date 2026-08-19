@@ -32,7 +32,7 @@ provision:
       scope: "repo,read:org,read:user"
       flow: authorizationCode
       identityProvider: Custom
-      isPKCEEnabled: true
+      isPKCEEnabled: false
       tokenExchangeMethodType: PostRequestBody
       baseUrl: https://api.githubcopilot.com/mcp/
     writeToEnvironmentFile:

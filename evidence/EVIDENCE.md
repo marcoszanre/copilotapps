@@ -11,7 +11,8 @@ agent **Sales Studiodev v1.0.9**, title id `T_da2b4705-2539-88dc-137c-b3a5f0d2e1
 |---|---|
 | Was the declarative agent's GitHub error fixed? | **Yes — the code/config defect is fixed and verified in production.** |
 | Does the agent → MCP → GitHub write pipeline actually work? | **Yes — proven by 9 real commits it authored (section 3).** |
-| Is anything still outstanding? | **One interactive GitHub sign-in**, which only the account owner can perform (section 5). |
+| Was the Copilot Studio replica built too? | **Yes — and it is now published and answering live (section 8).** |
+| Is anything still outstanding? | **One interactive GitHub sign-in** (section 5) and **the CPS GitHub tool was never connected** (section 8). |
 
 ---
 
@@ -138,6 +139,8 @@ Everything downstream is already verified, so this should succeed on the first a
 | `02-da-meeting-prep-live.png` | Live grounded response from Sales Studiodev |
 | `03-github-commits-by-agent.png` | `pages/` commit history in GitHub |
 | `04-agent-published-page-live.png` | An agent-published page rendering on the public web |
+| `05-cps-sales-studio2-published.png` | Copilot Studio showing `Sales Studio 2` as Published |
+| `06-cps-live-conversation.png` | Live conversation with the published CPS agent |
 | `Record-Evidence.ps1` | The recorder used (see note below) |
 
 > `C:\Users\marcoszanr\Documents\Dev\custom_recorder` was **empty** throughout this
@@ -157,3 +160,62 @@ a66a8ea  Simplify GitHub MCP plugin to dynamic tool discovery and reset auth con
 5dd8af3  Remove x-mcp-header annotations that broke every GitHub MCP call
 1cbcf62  Bump dev agent version to 1.0.5 after republish
 ```
+
+---
+
+## 8. The Copilot Studio replica
+
+It **had** been built — four times, actually, in a ~50 minute window on 2026-08-19, which
+reads as retries rather than intent. **None had ever been published**, which is why nothing
+could be demonstrated.
+
+| Agent | Agent ID | `publishedon` |
+|---|---|---|
+| **Sales Studio 2** (canonical) | `693cf076-699b-f111-b8de-70a8a5b2f7b1` | **`2026-08-19T11:04:42Z`** ✅ |
+| Sales Studio | `6a0fad16-eff1-451a-a650-f36ede450bb1` | `null` |
+| Sales Studio | `5da8e26c-3564-457a-95a2-352038e3272b` | `null` |
+| Sales Studio | `1a8476cf-8655-4b71-90f1-f11db117ef90` | `null` |
+
+Environment `diamond-dev` / `7f542d31-61bc-ee96-bc80-c6323abd1b0a`.
+Live: <https://copilotstudio.microsoft.com/environments/7f542d31-61bc-ee96-bc80-c6323abd1b0a/bots/693cf076-699b-f111-b8de-70a8a5b2f7b1/overview>
+
+`Sales Studio 2` is a genuine 1:1 replica — 18 live server-side components: 4 child agents
+(`MeetingPrep`, `FollowUpSummary`, `AccountResearch`, `PublishHtmlPage`) + 13 topics + 1 GPT
+component.
+
+### Live conversation, captured in the Copilot Studio test pane
+
+> **Prompt:** *Help me prep for a customer meeting tomorrow with Contoso about renewing
+> their cloud subscription. What should I cover?*
+
+> **Sales Studio 2:** *"Pre-read: Reunião de renovação de assinatura de nuvem — Contoso.
+> Fontes consultadas: e-mail, reuniões, Teams, arquivos. Janela de busca: últimos 90 dias +
+> reuniões anteriores nos últimos 6 meses. Participantes: **Não encontrados** nos conteúdos
+> do Microsoft 365 pesquisados … Se precisar de sugestões de tópicos ou quiser transformar
+> este pre-read em uma página HTML para compartilhar, posso ajudar!"*
+
+Routing to `MeetingPrep` worked, the pre-read structure is correct, sources searched are
+declared, nothing was fabricated, and it correctly offered the hand-off to the HTML page
+capability.
+
+### ⚠️ Two real defects found on the CPS side
+
+1. **The push initially failed** with
+   `[0x80040265:IsvAborted] "A record with the specified key values does not exist in
+   connectionreference entity"` because `actions/GitHubMcp.mcs.yml` still contained the
+   placeholder `_REPLACE_with_github_mcp_connection_reference_from_portal`.
+   The file was **preserved** at `cps_sales_studio_v2\_pending_github_mcp\GitHubMcp.mcs.yml`,
+   not deleted, and the push then succeeded.
+
+   > This file **validated 100% clean (20/20 files, 0 errors, 0 warnings)** and still failed
+   > server-side — the same "green validation, broken agent" trap as before. Validation is
+   > not proof.
+
+2. **The GitHub MCP tool is not connected to the CPS agent at all.** Three independent
+   checks: 34 connection references in `diamond-dev` and **zero** for GitHub; **zero** action
+   components on the live bot; the tool is never referenced from `PublishHtmlPage`.
+   So the CPS replica's 4th capability (publish to `marcoszanre/copilotapps`) is
+   **non-functional today**, independently of the OAuth question — it needs a GitHub
+   connection created in the portal first.
+
+The three redundant draft agents were left untouched pending a decision.

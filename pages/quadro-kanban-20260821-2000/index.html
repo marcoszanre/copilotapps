@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Quadro Kanban</title>
+  <style>
+    :root {
+      --color-afazer: #4e9cff;
+      --color-progresso: #ffb94e;
+      --color-concluido: #70de7b;
+      --color-bg-gradient: linear-gradient(133deg, #e8eaf6 55%, #cfd8dc 100%);
+      --shadow: 0 2px 8px rgba(0,0,0,0.07);
+      --border-radius: 18px;
+      --font-stack: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      --header-gradient: linear-gradient(90deg, #1976d2 0%, #4e9cff 100%);
+      --max-width: 1200px;
+      --transition: all 0.19s cubic-bezier(.49,.07,.54,.99);
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: var(--font-stack);
+      background: var(--color-bg-gradient);
+      color: #222;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+    }
+    header {
+      background: var(--header-gradient);
+      color: #fff;
+      padding: 2rem 0 1.2rem 0;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border-bottom-right-radius: var(--border-radius);
+      border-bottom-left-radius: var(--border-radius);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.24em;
+      letter-spacing: .04em;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    main {
+      flex: 1 1 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.6rem;
+      padding: 3rem 1rem 0 1rem;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      box-sizing: border-box;
+      width: 100%;
+    }
+    .kanban-section {
+      background: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      min-width: 280px;
+      flex: 1 1 300px;
+      max-width: 390px;
+      padding: 1.25rem 1rem 1.8rem 1rem;
+      transition: var(--transition);
+      position: relative;
+    }
+    .kanban-section[data-section="afazer"] {
+      border-top: 6px solid var(--color-afazer);
+    }
+    .kanban-section[data-section="progresso"] {
+      border-top: 6px solid var(--color-progresso);
+    }
+    .kanban-section[data-section="concluido"] {
+      border-top: 6px solid var(--color-concluido);
+    }
+    .kanban-section.drag-over {
+      box-shadow: 0 4px 16px rgba(40,120,220,0.12);
+      background: linear-gradient(136deg,#e3e9fa 60%, #fff 100%);
+      border-color: #1976d2;
+      outline: 2px solid #1976d2;
+    }
+    .kanban-section h2 {
+      margin-top: 0;
+      font-size: 1.34em;
+      font-weight: 600;
+      letter-spacing: .02em;
+      display: flex;
+      align-items: center;
+      gap: .46em;
+    }
+    .badge {
+      background: #eee;
+      color: #222;
+      font-size: .98em;
+      font-weight: 500;
+      border-radius: 1em;
+      padding: 0.175em 0.7em;
+      margin-left: .6em;
+      box-shadow: 0 2px 6px rgba(120,120,120,0.11);
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .kanban-cards {
+      flex: 1 1 auto;
+      margin: 1em 0;
+      min-height: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4em;
+      position:relative;
+    }
+    .kanban-card {
+      background: #f3f5ff;
+      box-shadow: 0 2px 8px rgba(20,40,80,0.08);
+      border-radius: 1.07em;
+      padding: 1em 1.1em .8em 1.1em;
+      font-size: 1em;
+      font-weight: 500;
+      color: #222;
+      cursor: grab;
+      position: relative;
+      margin-bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      transition: var(--transition);
+      min-height: 38px;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    .kanban-card[data-section="afazer"] {
+      border-left: 6px solid var(--color-afazer);
+    }
+    .kanban-card[data-section="progresso"] {
+      border-left: 6px solid var(--color-progresso);
+    }
+    .kanban-card[data-section="concluido"] {
+      border-left: 6px solid var(--color-concluido);
+    }
+    .kanban-card.dragging {
+      opacity: .84;
+      transform: rotate(-6deg) scale(1.05);
+      box-shadow: 0 8px 21px rgba(50,90,180,0.20);
+      z-index: 99;
+    }
+    .kanban-card .delete-btn {
+      background: none;
+      border: none;
+      color: #ae2020;
+      font-size: 1.18em;
+      padding: 0 .2em;
+      margin-left: .9em;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background .17s;
+      font-weight: 600;
+      outline: none;
+    }
+    .kanban-card .delete-btn:focus,
+    .kanban-card .delete-btn:hover {
+      background: #ffebee;
+      color: #c60000;
+    }
+    .input-row {
+      display: flex;
+      gap: .5em;
+      margin-top: .7em;
+      align-items: center;
+    }
+    .input-row input[type=text] {
+      flex: 1;
+      border-radius: 7px;
+      border: 1.5px solid #b3bfcf;
+      padding: .31em .53em;
+      font-size: .98em;
+      outline: none;
+      transition: border-color .17s;
+      background: #f4f7ff;
+      min-width: 0;
+    }
+    .input-row input[type=text]:focus {
+      border-color: #1976d2;
+    }
+    .input-row button.add-btn {
+      background: var(--color-afazer);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: .97em;
+      font-weight: 600;
+      padding: .33em .93em;
+      cursor: pointer;
+      transition: background .17s;
+    }
+    .kanban-section[data-section="progresso"] .input-row button.add-btn {
+      background: var(--color-progresso);
+      color: #704f00;
+    }
+    .kanban-section[data-section="concluido"] .input-row button.add-btn {
+      background: var(--color-concluido);
+      color: #106920;
+    }
+    .input-row button.add-btn:focus,
+    .input-row button.add-btn:hover {
+      filter: brightness(1.15);
+      outline: 2px solid #1976d2;
+    }
+    @media (max-width: 700px) {
+      main {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2em;
+        padding-top: 1.7em;
+      }
+      .kanban-section {
+        width: 100%;
+        min-width: unset;
+        max-width: unset;
+        flex: 1 1 auto;
+      }
+    }
+    footer {
+      color: #555;
+      text-align: center;
+      font-size: .96em;
+      margin: 2.3em 0 1.1em 0;
+      opacity: .93;
+      letter-spacing: .01em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Quadro Kanban</h1>
+    <div style="font-size:1.07em;font-weight:400;margin-top:.4em;">Organize e acompanhe tarefas facilmente</div>
+  </header>
+  <main>
+    <section class="kanban-section" data-section="afazer" aria-labelledby="col-afazer">
+      <h2 id="col-afazer">A Fazer <span class="badge" id="badge-afazer">0</span></h2>
+      <div class="kanban-cards" id="cards-afazer"></div>
+      <form class="input-row" autocomplete="off" onsubmit="return false;">
+        <input type="text" id="input-afazer" placeholder="Nova tarefa..." aria-label="Adicionar tarefa em A Fazer" maxlength="80">
+        <button class="add-btn" type="button" onclick="addCard('afazer')">Adicionar</button>
+      </form>
+    </section>
+    <section class="kanban-section" data-section="progresso" aria-labelledby="col-progresso">
+      <h2 id="col-progresso">Em Progresso <span class="badge" id="badge-progresso">0</span></h2>
+      <div class="kanban-cards" id="cards-progresso"></div>
+      <form class="input-row" autocomplete="off" onsubmit="return false;">
+        <input type="text" id="input-progresso" placeholder="Nova tarefa..." aria-label="Adicionar tarefa em Em Progresso" maxlength="80">
+        <button class="add-btn" type="button" onclick="addCard('progresso')">Adicionar</button>
+      </form>
+    </section>
+    <section class="kanban-section" data-section="concluido" aria-labelledby="col-concluido">
+      <h2 id="col-concluido">Concluído <span class="badge" id="badge-concluido">0</span></h2>
+      <div class="kanban-cards" id="cards-concluido"></div>
+      <form class="input-row" autocomplete="off" onsubmit="return false;">
+        <input type="text" id="input-concluido" placeholder="Nova tarefa..." aria-label="Adicionar tarefa em Concluído" maxlength="80">
+        <button class="add-btn" type="button" onclick="addCard('concluido')">Adicionar</button>
+      </form>
+    </section>
+  </main>
+  <footer>
+    Kanban feito com HTML+CSS+JS — Todos os dados ficam no dispositivo | <span aria-hidden="true" aria-label="copyright">&copy;</span> 2026
+  </footer>
+  <script>
+    const SECTIONS = ['afazer', 'progresso', 'concluido'];
+    const SAMPLE_CARDS = {
+      'afazer': [
+        { text: 'Desenhar wireframe' },
+        { text: 'Revisar copy' }
+      ],
+      'progresso': [
+        { text: 'Publicar release' }
+      ],
+      'concluido': [
+        { text: 'Atualizar documentação' }
+      ]
+    };
+    let board = null;
+    function loadBoard() {
+      try {
+        const saved = localStorage.getItem('kanban-board');
+        if (saved) {
+          board = JSON.parse(saved);
+          if (!board || typeof board !== 'object' || !SECTIONS.every(s => s in board && Array.isArray(board[s]))) {
+            board = JSON.parse(JSON.stringify(SAMPLE_CARDS));
+          }
+        } else {
+          board = JSON.parse(JSON.stringify(SAMPLE_CARDS));
+        }
+      } catch(e) {
+        board = JSON.parse(JSON.stringify(SAMPLE_CARDS));
+      }
+    }
+    function saveBoard() {
+      try {
+        localStorage.setItem('kanban-board', JSON.stringify(board));
+      } catch(e) {}
+    }
+    function renderBoard() {
+      SECTIONS.forEach(section => {
+        const container = document.getElementById('cards-' + section);
+        container.innerHTML = '';
+        let cards = board[section] || [];
+        cards.forEach((card, idx) => {
+          const el = document.createElement('div');
+          el.className = 'kanban-card';
+          el.setAttribute('data-section', section);
+          el.setAttribute('draggable', 'true');
+          el.setAttribute('data-idx', idx);
+          el.setAttribute('aria-label', card.text);
+          el.innerHTML = `<span>${escapeHTML(card.text)}</span><button class="delete-btn" tabindex="0" aria-label="Remover tarefa" title="Remover" onclick="deleteCard('${section}',${idx})">&times;</button>`;
+          el.addEventListener('dragstart', handleDragStart);
+          el.addEventListener('dragend', handleDragEnd);
+          container.appendChild(el);
+        });
+        const badge = document.getElementById('badge-' + section);
+        if (badge) badge.textContent = cards.length;
+      });
+    }
+    function addCard(section) {
+      const input = document.getElementById('input-' + section);
+      if (!input) return;
+      let text = input.value.trim();
+      if (!text) return;
+      if (text.length > 80) text = text.slice(0,80);
+      board[section].push({ text });
+      input.value = '';
+      renderBoard();
+      saveBoard();
+    }
+    function deleteCard(section, idx) {
+      if (!board[section] || !board[section][idx]) return;
+      board[section].splice(idx,1);
+      renderBoard();
+      saveBoard();
+    }
+    let dragging = null;
+    let dragOrigin = null;
+    function handleDragStart(ev) {
+      dragging = ev.target;
+      dragOrigin = dragging.getAttribute('data-section');
+      ev.target.classList.add('dragging');
+      ev.dataTransfer.effectAllowed = 'move';
+      ev.dataTransfer.setData('text/plain', dragging.textContent);
+      ev.dataTransfer.setDragImage(makeGhost(ev.target), 80, 22);
+    }
+    function handleDragEnd(ev) {
+      ev.target.classList.remove('dragging');
+      dragging = null;
+      dragOrigin = null;
+      removeDragOverIndicators();
+      cleanupGhosts();
+    }
+    function removeDragOverIndicators() {
+      document.querySelectorAll('.kanban-section.drag-over').forEach(el => {
+        el.classList.remove('drag-over');
+      });
+    }
+    SECTIONS.forEach(section => {
+      const col = document.querySelector('.kanban-section[data-section="' + section + '"]');
+      col.addEventListener('dragover', function(ev) {
+        ev.preventDefault();
+        col.classList.add('drag-over');
+        ev.dataTransfer.dropEffect = 'move';
+      });
+      col.addEventListener('dragleave', function(ev) {
+        col.classList.remove('drag-over');
+      });
+      col.addEventListener('drop', function(ev) {
+        ev.preventDefault();
+        col.classList.remove('drag-over');
+        if (!dragging) return;
+        let origin = dragOrigin;
+        let idx = parseInt(dragging.getAttribute('data-idx'), 10);
+        let card = board[origin][idx];
+        if (!card) return;
+        board[origin].splice(idx,1);
+        board[section].push(card);
+        renderBoard();
+        saveBoard();
+      });
+    });
+    let ghosts = [];
+    function makeGhost(card) {
+      const ghost = card.cloneNode(true);
+      ghost.style.background = '#dbe4ff';
+      ghost.style.boxShadow = '0 6px 21px rgba(50,90,180,0.18)';
+      ghost.style.opacity = '.95';
+      ghost.style.transform = 'rotate(-6deg) scale(1.09)';
+      ghost.style.width = '320px';
+      ghost.style.position = 'absolute';
+      ghost.style.top = '-1000px';
+      ghost.style.pointerEvents = 'none';
+      document.body.appendChild(ghost);
+      ghosts.push(ghost);
+      return ghost;
+    }
+    function cleanupGhosts() {
+      ghosts.forEach(g => { if (g.parentNode) g.parentNode.removeChild(g); });
+      ghosts = [];
+    }
+    function escapeHTML(txt) {
+      if (!txt) return '';
+      return txt.replace(/[&<>"]/g, function(c) {
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c] || c;
+      });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      loadBoard();
+      renderBoard();
+    });
+  </script>
+</body>
+</html>
